@@ -45,6 +45,7 @@
         name: jmeter-pvc-{{ app_name }}
         definition:
           spec:
+            storageClassName: manual
             accessModes:
               - ReadWriteOnce
             resources:
