@@ -37,6 +37,20 @@
             teste.jmx: "{{ lookup('file', '/tmp/jmeter_files/' + jmx_file_name) }}"
       run_once: true
 
+    - name: Criar PVC
+      community.kubernetes.k8s:
+        api_version: v1
+        kind: PersistentVolumeClaim
+        namespace: "{{ app_name }}"
+        name: jmeter-pvc-{{ app_name }}
+        definition:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
+
     - name: Create JMeter Slaves Deployment
       community.kubernetes.k8s:
         api_version: apps/v1
@@ -122,4 +136,4 @@
                     name: jmeter-test-script
                 - name: jmeter-results
                   persistentVolumeClaim:
-                    claimName: jmeter-pvc
+                    claimName: jmeter-pvc-{{ app_name }}
