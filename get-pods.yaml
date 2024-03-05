@@ -88,10 +88,10 @@
         api_version: v1
         kind: Service
         namespace: "{{ app_name }}"
-        name: jmeter-slave
+        name: jmeter-slaves
         definition:
           metadata:
-            name: jmeter-slave
+            name: jmeter-slaves
           spec:
             selector:
               app: jmeter-slave
