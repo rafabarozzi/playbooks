@@ -2,11 +2,11 @@
 - name: Kubernetes Teste
   hosts: localhost
   gather_facts: no
-   vars:
-     namespace: teste-jmeter
-     git_repo_url: "git@github.com:rafabarozzi/jmeter.git"
-     branch_name: "master"
-     jmx_file_name: "teste.jmx"
+  vars:
+    namespace: teste-jmeter
+    git_repo_url: "git@github.com:rafabarozzi/jmeter.git"
+    branch_name: "master"
+    jmx_file_name: "teste.jmx"
 
   tasks:
     - name: Create a namespace for the application
