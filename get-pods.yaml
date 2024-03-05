@@ -37,6 +37,20 @@
             teste.jmx: "{{ lookup('file', '/tmp/jmeter_files/' + jmx_file_name) }}"
       run_once: true
 
+    - name: Criar PV
+      community.kubernetes.k8s:
+        api_version: v1
+        kind: PersistentVolume
+        name: jmeter-pv-{{ app_name }}
+        definition:
+          spec:
+            capacity:
+              storage: 1Gi
+            accessModes:
+              - ReadWriteOnce
+            hostPath:
+              path: "/tmp/{{ app_name }}/results"
+
     - name: Criar PVC
       community.kubernetes.k8s:
         api_version: v1
@@ -145,7 +159,7 @@
                 - name: jmeter-master
                   image: rafabarozzi/jmeter-base:latest
                   command: ["/bin/bash"]
-                  args: ["-c", "/opt/apache-jmeter-${JMETER_VERSION}/bin/jmeter -n -t /tests/teste.jmx -Rjmeter-slaves -l /tests/results/results.jtl -Dserver.rmi.ssl.disable=true"]
+                  args: ["-c", "/opt/apache-jmeter-${JMETER_VERSION}/bin/jmeter -n -t /tests/teste.jmx -Rjmeter-slaves -l /tests/results/results_{{ app_name }}.jtl -Dserver.rmi.ssl.disable=true"]
                   volumeMounts:
                   - name: test-script
                     mountPath: /tests
