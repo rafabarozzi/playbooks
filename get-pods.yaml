@@ -3,10 +3,10 @@
   hosts: localhost
   gather_facts: no
   vars:
-    namespace: "jmeter"
-    git_repo_url: "git@github.com:rafabarozzi/jmeter.git"
-    branch_name: "master"
-    jmx_file_name: "teste.jmx"
+    app_name: "jmeter"
+    # git_repo_url: "git@github.com:rafabarozzi/jmeter.git"
+    # branch_name: "master"
+    # jmx_file_name: "teste.jmx"
 
   tasks:
     - name: Create a namespace for the application
@@ -14,7 +14,7 @@
         state: present
         api_version: v1
         kind: Namespace
-        name: "{{ namespace }}"
+        name: "{{ app_name }}"
 
     # - name: "Clonar o repositório Git"
     #   ansible.builtin.git:
