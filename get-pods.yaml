@@ -44,6 +44,7 @@
         name: jmeter-pv-{{ app_name }}
         definition:
           spec:
+            storageClassName: manual
             capacity:
               storage: 1Gi
             accessModes:
