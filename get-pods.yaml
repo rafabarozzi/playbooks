@@ -107,6 +107,10 @@
                   type: Utilization
                   averageUtilization: 80
 
+    - name: Esperar 30 segundos
+      pause:
+        seconds: 30      
+
     - name: Create JMeter Master Job
       community.kubernetes.k8s:
         api_version: batch/v1
