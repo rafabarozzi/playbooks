@@ -16,26 +16,26 @@
         kind: Namespace
         name: "{{ namespace }}"
 
-    - name: "Clonar o repositório Git"
-      ansible.builtin.git:
-        repo: "{{ git_repo_url }}"
-        dest: "/tmp/jmeter_files"
-        version: "{{ branch_name }}"
-        accept_hostkey: yes
-      run_once: true
+    # - name: "Clonar o repositório Git"
+    #   ansible.builtin.git:
+    #     repo: "{{ git_repo_url }}"
+    #     dest: "/tmp/jmeter_files"
+    #     version: "{{ branch_name }}"
+    #     accept_hostkey: yes
+    #   run_once: true
 
-    - name: "Criar ConfigMap com o arquivo JMX"
-      community.kubernetes.k8s:
-        state: present
-        namespace: "{{ namespace }}"
-        kind: ConfigMap
-        name: jmeter-test-script
-        definition:
-          metadata:
-            name: jmeter-test-script
-          data:
-            teste.jmx: "{{ lookup('file', '/tmp/jmeter_files/' + jmx_file_name) }}"
-      run_once: true
+    # - name: "Criar ConfigMap com o arquivo JMX"
+    #   community.kubernetes.k8s:
+    #     state: present
+    #     namespace: "{{ namespace }}"
+    #     kind: ConfigMap
+    #     name: jmeter-test-script
+    #     definition:
+    #       metadata:
+    #         name: jmeter-test-script
+    #       data:
+    #         teste.jmx: "{{ lookup('file', '/tmp/jmeter_files/' + jmx_file_name) }}"
+    #   run_once: true
 
     # - name: Create JMeter Slaves Deployment
     #   community.kubernetes.k8s:
