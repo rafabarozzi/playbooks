@@ -83,6 +83,23 @@
                       cpu: "1"
                       memory: "512Mi"
 
+    - name: Criar Service Slaves
+      community.kubernetes.k8s:
+        api_version: v1
+        kind: Service
+        namespace: "{{ app_name }}"
+        name: jmeter-slave
+        definition:
+          metadata:
+            name: jmeter-slave
+          spec:
+            selector:
+              app: jmeter-slave
+            ports:
+            - protocol: TCP
+              port: 1099
+              targetPort: 1099
+
     - name: Create JMeter Slaves HorizontalPodAutoscaler
       community.kubernetes.k8s:
         api_version: autoscaling/v2
