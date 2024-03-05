@@ -41,7 +41,7 @@
       community.kubernetes.k8s:
         api_version: apps/v1
         kind: Deployment
-        namespace: "{{ namespace }}"
+        namespace: "{{ app_name }}"
         name: jmeter-slave
         definition:
           metadata:
@@ -73,7 +73,7 @@
       community.kubernetes.k8s:
         api_version: autoscaling/v2
         kind: HorizontalPodAutoscaler
-        namespace: "{{ namespace }}"
+        namespace: "{{ app_name }}"
         name: jmeter-slave-hpa
         definition:
           metadata:
@@ -97,7 +97,7 @@
       community.kubernetes.k8s:
         api_version: batch/v1
         kind: Job
-        namespace: "{{ namespace }}"
+        namespace: "{{ app_name }}"
         name: jmeter-master-job
         definition:
           metadata:
