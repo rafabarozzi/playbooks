@@ -37,89 +37,89 @@
             teste.jmx: "{{ lookup('file', '/tmp/jmeter_files/' + jmx_file_name) }}"
       run_once: true
 
-    # - name: Create JMeter Slaves Deployment
-    #   community.kubernetes.k8s:
-    #     api_version: apps/v1
-    #     kind: Deployment
-    #     namespace: "{{ namespace }}"
-    #     name: jmeter-slave
-    #     definition:
-    #       metadata:
-    #         name: jmeter-slave
-    #       spec:
-    #         replicas: 1
-    #         selector:
-    #           matchLabels:
-    #             app: jmeter-slave
-    #         template:
-    #           metadata:
-    #             labels:
-    #               app: jmeter-slave
-    #           spec:
-    #             containers:
-    #             - name: jmeter-slave
-    #               image: rafabarozzi/jmeter-base:latest
-    #               command: ["/bin/bash"]
-    #               args: ["-c", "/opt/apache-jmeter-${JMETER_VERSION}/bin/jmeter-server -Dserver.rmi.ssl.disable=true"]
-    #               resources:
-    #                 requests:
-    #                   cpu: "500m"
-    #                   memory: "256Mi"
-    #                 limits:
-    #                   cpu: "1"
-    #                   memory: "512Mi"
+    - name: Create JMeter Slaves Deployment
+      community.kubernetes.k8s:
+        api_version: apps/v1
+        kind: Deployment
+        namespace: "{{ namespace }}"
+        name: jmeter-slave
+        definition:
+          metadata:
+            name: jmeter-slave
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: jmeter-slave
+            template:
+              metadata:
+                labels:
+                  app: jmeter-slave
+              spec:
+                containers:
+                - name: jmeter-slave
+                  image: rafabarozzi/jmeter-base:latest
+                  command: ["/bin/bash"]
+                  args: ["-c", "/opt/apache-jmeter-${JMETER_VERSION}/bin/jmeter-server -Dserver.rmi.ssl.disable=true"]
+                  resources:
+                    requests:
+                      cpu: "500m"
+                      memory: "256Mi"
+                    limits:
+                      cpu: "1"
+                      memory: "512Mi"
 
-    # - name: Create JMeter Slaves HorizontalPodAutoscaler
-    #   community.kubernetes.k8s:
-    #     api_version: autoscaling/v2
-    #     kind: HorizontalPodAutoscaler
-    #     namespace: "{{ namespace }}"
-    #     name: jmeter-slave-hpa
-    #     definition:
-    #       metadata:
-    #         name: jmeter-slave-hpa
-    #       spec:
-    #         scaleTargetRef:
-    #           apiVersion: apps/v1
-    #           kind: Deployment
-    #           name: jmeter-slave
-    #         minReplicas: 1
-    #         maxReplicas: 3
-    #         metrics:
-    #         - type: Resource
-    #           resource:
-    #             name: cpu
-    #             target:
-    #               type: Utilization
-    #               averageUtilization: 80
+    - name: Create JMeter Slaves HorizontalPodAutoscaler
+      community.kubernetes.k8s:
+        api_version: autoscaling/v2
+        kind: HorizontalPodAutoscaler
+        namespace: "{{ namespace }}"
+        name: jmeter-slave-hpa
+        definition:
+          metadata:
+            name: jmeter-slave-hpa
+          spec:
+            scaleTargetRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: jmeter-slave
+            minReplicas: 1
+            maxReplicas: 3
+            metrics:
+            - type: Resource
+              resource:
+                name: cpu
+                target:
+                  type: Utilization
+                  averageUtilization: 80
 
-    # - name: Create JMeter Master Job
-    #   community.kubernetes.k8s:
-    #     api_version: batch/v1
-    #     kind: Job
-    #     namespace: "{{ namespace }}"
-    #     name: jmeter-master-job
-    #     definition:
-    #       metadata:
-    #         name: jmeter-master-job
-    #       spec:
-    #         template:
-    #           spec:
-    #             containers:
-    #             - name: jmeter-master
-    #               image: rafabarozzi/jmeter-base:latest
-    #               command: ["/bin/bash"]
-    #               args: ["-c", "/opt/apache-jmeter-${JMETER_VERSION}/bin/jmeter -n -t /tests/teste.jmx -Rjmeter-slaves -l /tests/results/results.jtl -Dserver.rmi.ssl.disable=true"]
-    #               volumeMounts:
-    #               - name: test-script
-    #                 mountPath: /tests
-    #               - name: jmeter-results
-    #                 mountPath: /tests/results
-    #             restartPolicy: Never
-    #             volumes:
-    #             - name: test-script
-    #               configMap:
-    #                 name: jmeter-test-script
-    #             - name: jmeter-results
-    #               persistentVolumeClaim:
-    #                 claimName: jmeter-pvc
+    - name: Create JMeter Master Job
+      community.kubernetes.k8s:
+        api_version: batch/v1
+        kind: Job
+        namespace: "{{ namespace }}"
+        name: jmeter-master-job
+        definition:
+          metadata:
+            name: jmeter-master-job
+          spec:
+            template:
+              spec:
+                containers:
+                - name: jmeter-master
+                  image: rafabarozzi/jmeter-base:latest
+                  command: ["/bin/bash"]
+                  args: ["-c", "/opt/apache-jmeter-${JMETER_VERSION}/bin/jmeter -n -t /tests/teste.jmx -Rjmeter-slaves -l /tests/results/results.jtl -Dserver.rmi.ssl.disable=true"]
+                  volumeMounts:
+                  - name: test-script
+                    mountPath: /tests
+                  - name: jmeter-results
+                    mountPath: /tests/results
+                restartPolicy: Never
+                volumes:
+                - name: test-script
+                  configMap:
+                    name: jmeter-test-script
+                - name: jmeter-results
+                  persistentVolumeClaim:
+                    claimName: jmeter-pvc
