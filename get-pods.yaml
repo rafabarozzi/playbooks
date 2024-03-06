@@ -2,11 +2,11 @@
 - name: Kubernetes Teste
   hosts: localhost
   gather_facts: no
-  vars:
-    app_name: "jmeter"
-    git_repo_url: "git@github.com:rafabarozzi/jmeter.git"
-    branch_name: "master"
-    jmx_file_name: "teste.jmx"
+  # vars:
+  #   app_name: "jmeter"
+  #   git_url: "git@github.com:rafabarozzi/jmeter.git"
+  #   branch: "master"
+  #   file_name: "teste.jmx"
 
   tasks:
     - name: Create a namespace for the application
@@ -18,9 +18,9 @@
 
     - name: "Clonar o repositório Git"
       ansible.builtin.git:
-        repo: "{{ git_repo_url }}"
+        repo: "{{ git_url }}"
         dest: "/tmp/jmeter_files"
-        version: "{{ branch_name }}"
+        version: "{{ branch }}"
         accept_hostkey: yes
       run_once: true
 
@@ -34,7 +34,7 @@
           metadata:
             name: jmeter-test-script
           data:
-            teste.jmx: "{{ lookup('file', '/tmp/jmeter_files/' + jmx_file_name) }}"
+            teste.jmx: "{{ lookup('file', '/tmp/jmeter_files/' + file_name) }}"
       run_once: true
 
     - name: Criar PV
