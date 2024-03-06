@@ -4,16 +4,16 @@
 
   tasks:
       - name: Delete the application namespace
-      community.kubernetes.k8s:
-        state: absent
-        api_version: v1
-        kind: Namespace
-        name: "{{ app_name }}"
+        community.kubernetes.k8s:
+          state: absent
+          api_version: v1
+          kind: Namespace
+          name: "{{ app_name }}"
 
       - name: Delete the Persistent Volume
-      community.kubernetes.k8s:
-        state: absent
-        api_version: v1
-        kind: PersistentVolume
-        name: jmeter-pv-{{ app_name }}
+        community.kubernetes.k8s:
+          state: absent
+          api_version: v1
+          kind: PersistentVolume
+          name: jmeter-pv-{{ app_name }}
 

@@ -160,7 +160,7 @@
                 - name: jmeter-master
                   image: rafabarozzi/jmeter-base:latest
                   command: ["/bin/bash"]
-                  args: ["-c", "/opt/apache-jmeter-${JMETER_VERSION}/bin/jmeter -n -t /tests/teste.jmx -Rjmeter-slaves -l /tests/results/results_{{ app_name }}.jtl -Dserver.rmi.ssl.disable=true && curl -X POST -H 'Content-Type: application/json' -d '{\"app_name\":\"{{ app_name }}\"}' http://172.18.0.1/stop"]
+                  args: ["-c", "/opt/apache-jmeter-${JMETER_VERSION}/bin/jmeter -n -t /tests/teste.jmx -Rjmeter-slaves -l /tests/results/results_{{ app_name }}.jtl -Dserver.rmi.ssl.disable=true && curl -X POST -H 'Content-Type: application/json' -d '{\"app_name\":\"{{ app_name }}\"}' http://172.18.0.1:3000/stop"]
                   volumeMounts:
                   - name: test-script
                     mountPath: /tests
